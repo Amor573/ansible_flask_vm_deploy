@@ -1,0 +1,7 @@
+---
+- name: Deploy Nginx Load Balancer and Flask App using Docker
+  hosts: nginxlb
+  become: true
+  roles:
+    - flask_app
+    - nginx

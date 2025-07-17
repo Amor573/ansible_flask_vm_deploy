@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  app1:
+    build:
+      context: ./dockerfiles/app
+    container_name: app1
+    networks:
+      - app_net
+
+  app2:
+    build:
+      context: ./dockerfiles/app
+    container_name: app2
+    networks:
+      - app_net
+
+  app3:
+    build:
+      context: ./dockerfiles/app
+    container_name: app3
+    networks:
+      - app_net
+
+  app4:
+    build:
+      context: ./dockerfiles/app
+    container_name: app4
+    networks:
+      - app_net
+
+  app5:
+    build:
+      context: ./dockerfiles/app
+    container_name: app5
+    networks:
+      - app_net
+
+  nginx:
+    build:
+      context: ./dockerfiles/nginx
+    container_name: nginx_lb
+    ports:
+      - "80:80"
+    depends_on:
+      - app1
+      - app2
+      - app3
+      - app4
+      - app5
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    driver: bridge

@@ -1,0 +1,5 @@
+---
+- name: Launch docker-compose stack with forced recreation
+  command: docker-compose up --build --force-recreate -d
+  args:
+    chdir: /opt/nginx-ansible-docker
