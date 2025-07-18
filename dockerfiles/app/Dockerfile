@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . .
 
 # Install required Python packages
-RUN pip install --no-cache-dir flask 
+RUN pip install --no-cache-dir flask requests
 
 EXPOSE 5000
 
