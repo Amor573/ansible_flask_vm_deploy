@@ -78,3 +78,10 @@ The sample is a lab, not a production-ready web stack. Add health checks, TLS te
 - Architecture screenshot and sanitized test results
 
 *Portfolio theme: configuration management, containers, Linux operations, reverse proxying and deployment automation.*
+
+
+## Automated verification
+
+[![Compose integration smoke test](https://github.com/Amor573/ansible_flask_vm_deploy/actions/workflows/compose-ci.yml/badge.svg)](https://github.com/Amor573/ansible_flask_vm_deploy/actions/workflows/compose-ci.yml)
+
+The workflow now builds the containers, starts the proxy, checks NGINX configuration and makes an HTTP request to Flask. This is **an integration smoke test, not a production-deployment claim**. See [verification criteria](docs/verification.md), and verify that GitHub Actions reports a passing run before presenting the result as proof.
