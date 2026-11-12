@@ -1,0 +1,45 @@
+name: Compose integration smoke test
+on:
+  push:
+    paths:
+      - 'docker-compose.yaml'
+      - 'dockerfiles/**'
+      - '.github/workflows/compose-ci.yml'
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build-and-smoke-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Compose model
+        run: docker compose config -q
+      - name: Build containers
+        run: docker compose build
+      - name: Start five Flask apps behind NGINX
+        run: docker compose up -d --no-build
+      - name: Test NGINX config and HTTP response
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          docker compose exec -T nginx nginx -t
+          response=""
+          for attempt in $(seq 1 30); do
+            if response="$(curl -fsS --max-time 3 http://127.0.0.1/)"; then
+              break
+            fi
+            sleep 2
+          done
+          if [[ "$response" != *"Served by:"* ]]; then
+            echo "App response missing expected upstream hostname" >&2
+            exit 1
+          fi
+          echo "HTTP proxy smoke test passed; inspect logs for additional upstream behavior."
+      - name: Show logs and remove containers
+        if: always()
+        run: |
+          docker compose ps || true
+          docker compose logs --tail 80 || true
+          docker compose down -v --remove-orphans || true
